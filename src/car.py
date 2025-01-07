@@ -1,6 +1,5 @@
 from enum import Enum
 from dataclasses import dataclass
-from typing import List, Tuple
 
 class Direction(Enum):
     NORTH = 'N'

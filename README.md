@@ -32,16 +32,16 @@ python3 -m unittest discover tests
 ## 🎮 Usage
 Basic Commands:
 
-• F: Move forward one grid point
-• L: Rotate 90 degrees left
-• R: Rotate 90 degrees right
+- F: Move forward one grid point
+- L: Rotate 90 degrees left
+- R: Rotate 90 degrees right
 
 Directions:
 
-• N: North
-• S: South
-• E: East
-• W: West
+- N: North
+- S: South
+- E: East
+- W: West
 
 Example Session:
 
@@ -87,12 +87,12 @@ Step 3: Car A rotates → Car B rotates
 ## 🧪 Testing
 Tests cover:
 
-• Basic movement mechanics
-• Rotation functionality
-• Boundary condition handling
-• Collision detection
-• Invalid input handling
-• Multi-car scenarios
+- Basic movement mechanics
+- Rotation functionality
+- Boundary condition handling
+- Collision detection
+- Invalid input handling
+- Multi-car scenarios
 
 
 

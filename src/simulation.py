@@ -33,28 +33,23 @@ class Simulation:
           return len(collided_cars) > 0, collided_cars
 
       def run(self) -> List[str]:
-          # Find the maximum number of commands among all cars
           max_steps = max(len(car.commands) for car in self.cars)
-          
-          # Process commands step by step
+
           for step in range(max_steps):
               # Process each car sequentially within the step
               for car in self.cars:
                   if not car.collision_step and car.has_next_command():
-                      # Execute the command
                       car.execute_next_command(self.width, self.height)
                       
                       # Check for collision after this car's movement
                       has_collision, collided_cars = self.check_collision(car)
                       if has_collision:
                           current_step = step + 1
-                          # Mark all involved cars as collided
                           car.collision_step = current_step
                           car.collided_with = ", ".join(sorted(other.name for other in collided_cars))
                           
                           for other_car in collided_cars:
                               other_car.collision_step = current_step
-                              # Get all car names involved except the current car
                               other_car.collided_with = car.name
                           
                           # Generate collision results
@@ -67,7 +62,6 @@ class Simulation:
                               )
                           return results
           
-          # If no collisions occurred, return final positions
           return [
               f"{car.name}, ({car.position.x},{car.position.y}) {car.direction.value}"
               for car in sorted(self.cars, key=lambda x: x.name)

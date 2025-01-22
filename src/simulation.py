@@ -6,8 +6,14 @@ class Simulation:
           self.width = width
           self.height = height
           self.cars: List[Car] = []
+       
+      def is_name_taken(self, name: str) -> bool:
+          return any(car.name == name for car in self.cars)
 
       def add_car(self, car: Car) -> None:
+          
+          if self.is_name_taken(car.name):
+              raise ValueError(f"Car name {car.name} is already taken")
           # Validate initial position
           if not (0 <= car.position.x < self.width and 
                  0 <= car.position.y < self.height):
@@ -41,26 +47,35 @@ class Simulation:
                   if not car.collision_step and car.has_next_command():
                       car.execute_next_command(self.width, self.height)
                       
-                      # Check for collision after this car's movement
-                      has_collision, collided_cars = self.check_collision(car)
-                      if has_collision:
-                          current_step = step + 1
-                          car.collision_step = current_step
-                          car.collided_with = ", ".join(sorted(other.name for other in collided_cars))
+              checked_pairs = set()
+              for car in self.cars:
+                  if car.collision_step:
+                      continue
+                  for other_car in self.cars:
+                      if (other_car != car and
+                          not other_car.collision_step and 
+                          (car, other_car) not in checked_pairs and 
+                          (other_car, car) not in checked_pairs):
                           
-                          for other_car in collided_cars:
+                          checked_pairs.add((car,other_car))
+                          
+                          if car.position == other_car.position:
+                              current_step = step + 1
+                              car.collision_step = current_step
                               other_car.collision_step = current_step
+                              
+                              car.collided_with = other_car.name
                               other_car.collided_with = car.name
                           
-                          # Generate collision results
-                          results = []
-                          all_collided_cars = [car] + collided_cars
-                          for collided_car in sorted(all_collided_cars, key=lambda x: x.name):
-                              results.append(
-                                  f"{collided_car.name}, collides with {collided_car.collided_with} at "
-                                  f"({collided_car.position.x},{collided_car.position.y}) at step {collided_car.collision_step}"
-                              )
-                          return results
+                            # Generate collision results
+                              results = []
+                              all_collided_cars = [car, other_car]
+                              for collided_car in sorted(all_collided_cars, key=lambda x: x.name):
+                                results.append(
+                                    f"{collided_car.name}, collides with {collided_car.collided_with} at "
+                                    f"({collided_car.position.x},{collided_car.position.y}) at step {collided_car.collision_step}"
+                                )
+                              return results
           
           return [
               f"{car.name}, ({car.position.x},{car.position.y}) {car.direction.value}"

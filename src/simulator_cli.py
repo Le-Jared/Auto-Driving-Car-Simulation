@@ -36,6 +36,12 @@ class SimulatorCLI:
             print("\nPlease enter the name of the car:")
             name = input().strip()
             
+            if not name:
+                raise ValueError("Name cannot be empty")
+            
+            if self.simulation.is_name_taken(name):
+                raise ValueError(f"Name '{name}' is already taken")
+            
             print(f"Please enter initial position of car {name} in x y Direction format:")
             x, y, direction_str = input().strip().split()
             position = Position(int(x), int(y))

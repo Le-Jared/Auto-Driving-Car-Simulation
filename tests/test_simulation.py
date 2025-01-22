@@ -149,6 +149,24 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(car.position, Position(5, 5))
         self.assertEqual(car.direction, Direction.NORTH)
+        
+    def test_is_name_taken(self):
+        """Test the is_name_taken method"""
+        car = Car("Car1", Position(0, 0), Direction.NORTH, "F")
+        self.simulation.add_car(car)
+        self.assertTrue(self.simulation.is_name_taken("Car1"))
+        self.assertFalse(self.simulation.is_name_taken("Car2"))
+        
+    def test_add_car_with_duplicate_name(self):
+        """Test adding a car with a duplicate name"""
+        car1 = Car("Car1", Position(0, 0), Direction.NORTH, "F")
+        car2 = Car("Car1", Position(1, 1), Direction.SOUTH, "F")
+        
+        self.simulation.add_car(car1)
+        with self.assertRaises(ValueError) as context:
+            self.simulation.add_car(car2)
+        
+        self.assertEqual(str(context.exception), "Car name Car1 is already taken")
 
 if __name__ == '__main__':
     unittest.main()
